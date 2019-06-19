@@ -5,6 +5,38 @@ const DAYS_TO_STORE_TOKEN = 1;
 let _token = null;
 
 
+// ==== cookies ====
+function setCookie(cname, cvalue, exdays) {
+  var d = new Date();
+  d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+  var expires = "expires="+d.toUTCString();
+  document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+
+function getCookie(cname) {
+  var name = cname + "=";
+  var ca = document.cookie.split(';');
+  for(var i = 0; i < ca.length; i++) {
+    var c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "";
+}
+
+function showToken( selector,  token ) {
+    var tmsg = "Good news! Veritone has sent you a small token of appreciation:<br/>" +
+        '<div style="color:#288;font-size:7.5pt;">' + token + '</div>';
+    showMsg( "", "#message" ); // clear the default msg
+    showMsg( tmsg,selector ); 
+    document.querySelector(selector).style['overflow-wrap']="break-word"; 
+}
+
+
 // Pass a GraphQL query and a bearer token, get back an object suitable for POSTing.
 function createVeritonePayload( q, token ) {
   
