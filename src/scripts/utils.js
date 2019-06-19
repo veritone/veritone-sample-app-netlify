@@ -95,3 +95,9 @@ function showSnackbar(msg, err) {
         x.style["background-color"] = originalBackgroundColor;
     }, SNACK_DURATION);
 }
+
+// Utility for showing text in a DOM element
+function showMsg(msg, id) {
+    var messageNode = document.querySelector( id );
+    messageNode.innerHTML = msg;
+}
