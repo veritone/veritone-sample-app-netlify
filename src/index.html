@@ -12,13 +12,19 @@
      <p id="message">Need to log in to the system? Enter your 
       Veritone credentials below. 
      </p>       
-     <form>
-     <p>          <label>User Name<br/><input id="username" type="text" name="username"></label>
+
+     <p>          <label>User Name<br/><input id="username" 
+                                              type="text" 
+                                              autocomplete="username" 
+                                              name="username"></label>
      </p>
-     <p>          <label>Password<br/><input id="pw" type="password" autocomplete="current-password" name="pw"></label>
+     <p>          <label>Password<br/><input id="pw" 
+                                             type="password" 
+                                             autocomplete="current-password" 
+                                             name="pw"></label>
      </p>
      <p><button onclick="login()">Log in</button></p> 
-    </form>
+   
     
     
     </p>
