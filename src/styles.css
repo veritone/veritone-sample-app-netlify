@@ -101,6 +101,7 @@ input {
   line-height: 2.5;
   border: 2px solid var(--borderColor);
   border-radius: 4px;
+	font-size: 14pt;
   font-weight: bold;
 }
 
