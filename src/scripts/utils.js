@@ -26,11 +26,11 @@ window.addEventListener("load", function(event)
     if (!_token)
 	_token = getCookie( "token" );
 	
-	// Check if our URL contains a fresh token
+	// Check if our URL contains a token
     if (OUR_URL.indexOf(TOKEN_MARKER) != -1) {
         _token = OUR_URL.split(TOKEN_MARKER)[1].split("&")[0];
 	if ( _token && _token.length > 0 ) {
-            showSnackbar("Token obtained.");
+            showSnackbar("Token obtained via OAuth.");
 	    showToken("#smallToken", _token);
 	    setCookie("token", _token, DAYS_TO_STORE_TOKEN);
 	}
