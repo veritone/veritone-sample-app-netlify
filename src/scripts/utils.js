@@ -1,9 +1,44 @@
 // GLOBALS
 const API_ENDPOINT = "https://api.veritone.com/v3/graphql";
+const CLIENT_ID = "98aba40d-5bcb-4385-ac48-74763c88af74";
 const TEXT_VALIDATION_ERROR_MSG = "That doesn't look right. Try again.";
 const DAYS_TO_STORE_TOKEN = 1;
+let TDO_ID = null;
 let _token = null;
 
+function showToken( selector, token ) {
+    let TOKEN_MSG = "We have a token:<br/>" +
+        '<div style="color:#288;font-size:7.5pt;">' + token + '</div>';
+    showMsg( TOKEN_MSG, selector ); 
+    document.querySelector(selector).style['overflow-wrap']="break-word"; 
+}
+
+// onload handler
+window.addEventListener("load", function(event) 
+{
+    let TOKEN_MARKER = "access_token=";
+    let TDO_MARKER = "tdoId=";
+    let OUR_URL = location.href;
+	
+        // Eagerly load token from cookie
+    if (!_token)
+	_token = getCookie( "token" );
+	
+	// Check if our URL contains a fresh token
+    if (OUR_URL.indexOf(TOKEN_MARKER) != -1) {
+        _token = OUR_URL.split(TOKEN_MARKER)[1].split("&")[0];
+	if ( _token && _token.length > 0 ) {
+            showSnackbar("Token obtained.");
+	    showToken("#smallToken", _token);
+	    setCookie("token", _token, DAYS_TO_STORE_TOKEN);
+	}
+    }
+	// Check if URL contains a tdoId
+    else if (OUR_URL.indexOf(TDO_MARKER) != -1) {	    
+	TDO_ID = OUR_URL.split(TDO_MARKER)[1].split(/[#&]/)[0];
+	showSnackbar("TDO ID detected."); // for debug
+    }
+});
 
 // ==== cookies ====
 function setCookie(cname, cvalue, exdays) {
@@ -28,16 +63,17 @@ function getCookie(cname) {
   return "";
 }
 
-function showToken( selector,  token ) {
-    var tmsg = "Good news! Veritone has sent you a small token of appreciation:<br/>" +
-        '<div style="color:#288;font-size:7.5pt;">' + token + '</div>';
-    showMsg( "", "#message" ); // clear the default msg
-    showMsg( tmsg,selector ); 
-    document.querySelector(selector).style['overflow-wrap']="break-word"; 
+function getOAuthLink() {
+	
+    let clientID = CLIENT_ID;
+    let AUTH_BASE  = "https://api.veritone.com/v1/admin/oauth/authorize?scope=all&response_type=token&client_id=";
+    let redirect = "&redirect_uri=" + "https://simple-test.netlify.com";
+    var OAuthLink = AUTH_BASE + clientID + redirect;
+	
+    return OAuthLink;
 }
 
-
-// Pass a GraphQL query and a bearer token, get back an object suitable for POSTing.
+// Pass a GraphQL query and a bearer token, get payload suitable for POSTing.
 function createVeritonePayload( q, token ) {
   
     let theHeaders = {};
