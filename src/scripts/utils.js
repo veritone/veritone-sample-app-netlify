@@ -39,6 +39,7 @@ window.addEventListener("load", function(event)
     else if (OUR_URL.indexOf(TDO_MARKER) != -1) {	    
 	TDO_ID = OUR_URL.split(TDO_MARKER)[1].split(/[#&]/)[0];
 	showSnackbar("TDO ID detected."); // for debug
+        showTDO( TDO_ID, "#rawdata" ); 
     }
 });
 
@@ -170,4 +171,71 @@ function showSnackbar(msg, err) {
 function showMsg(msg, id) {
     var messageNode = document.querySelector( id );
     messageNode.innerHTML = msg;
+}
+
+var TDO_QUERY_TEMPLATE = `{
+  temporalDataObject(id: theID) {
+    name
+    id
+    details
+    description
+    assets {
+      records {
+        id
+        assetType
+        name
+        signedUri
+        details
+        container {
+          id
+        }
+      }
+      count
+    }
+    status
+    engineRuns {
+      count
+    }
+    sourceData {
+      source {
+        name
+        details
+      }
+      taskId
+      sourceId
+      scheduledJobId
+      engineId
+    }
+    thumbnailUrl
+    organizationId
+    jobs {
+      count
+    }
+  }
+}
+`;
+
+// Display raw TDO data in DOM node given by 'selector'
+async function showTDO( tdoId, selector ) {
+
+    if (!_token) {
+        showSnackbar("Need a valid token. Please log in.",1);
+        return;
+    }
+    
+    // Query to get a single TDO
+    var query = TDO_QUERY_TEMPLATE.replace( /theID/, '"'+ tdoId + '"');
+    let payload = createVeritonePayload( query, _token );
+    var json = await fetchJSONviaPOST( API_ENDPOINT, payload).catch(e=>{
+    	showSnackbar("Check the console... ", 1);
+        conbsole.log("Welp. Got this message: " + e.toString());
+    });
+
+    if (json) {
+        let theRawData = JSON.stringify(json,null,3);
+        'errors' in json ?
+	    console.log("JSON response contains error messages:\n\n" + 
+			theRawData ) && showSnackbar("Error. Check console.",1) :
+            showMsg( theRawData, selector );
+    }
 }
