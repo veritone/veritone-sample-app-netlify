@@ -1,6 +1,6 @@
 // GLOBALS
 const API_ENDPOINT = "https://api.veritone.com/v3/graphql";
-const CLIENT_ID = "98aba40d-5bcb-4385-ac48-74763c88af74";
+const CLIENT_ID = "caf06532-6787-45f3-a2e4-8ff02a55012f";
 const TEXT_VALIDATION_ERROR_MSG = "That doesn't look right. Try again.";
 const DAYS_TO_STORE_TOKEN = 1;
 let TDO_ID = null;
