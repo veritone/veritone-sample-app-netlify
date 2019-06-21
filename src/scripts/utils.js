@@ -215,7 +215,33 @@ var TDO_QUERY_TEMPLATE = `{
 }
 `;
 
-// Display raw TDO data in DOM node given by 'selector'
+function getAssetsAsMarkup( json ) {
+	
+    if ('assets' in json.data.temporalDataObject ) {
+         var records = json.data.temporalDataObject.assets.records;
+         var markup = "";
+         var link = '<a href="URL" target="_blank">TARGET</a>';
+         var results = [];
+         records.forEach( item=> { 
+             if (item.signedUri && item.signedUri.length > 0) {
+                  var a = link.replace("URL",item.signedUri).replace("TARGET",item.assetType);
+                  results.push( a );
+             }
+         });
+
+         var msg = '<div style="font-size:var(--mediumFontSize);"><b>Assets in this TDO:</b><br/>' + 
+	     results.join("<br/>") + "</div>"; 
+         if (results.join("").length == 0)
+	     msg = '<div style="font-size:var(--mediumFontSize);"><b>No assets in this TDO</b><br/><div>';
+	 
+	 return msg;
+    }
+	
+    return "";
+}
+
+
+// Display raw TDO data at DOM node given by 'selector'
 async function showTDO( tdoId, selector ) {
 
     if (!_token) {
@@ -232,10 +258,31 @@ async function showTDO( tdoId, selector ) {
     });
 
     if (json) {
+	    
+	    // get the stringified JSON
         let theRawData = JSON.stringify(json,null,3);
-        'errors' in json ?
-	    console.log("JSON response contains error messages:\n\n" + 
-			theRawData ) && showSnackbar("Error. Check console.",1) :
-            showMsg( theRawData, selector );
+	    
+	    // check for errors
+        if ('errors' in json) {
+	    console.log("JSON response contains error messages:\n\n" + theRawData );
+	    showSnackbar("Error. Check console.",1);
+	    return;
+	}	    
+	    
+	    // show the raw JSON 
+        showMsg( theRawData, selector );
+	    
+	    // show the name of the TDO
+	showMsg( json.data.temporalDataObject.name, "#process" );
+	    
+	    // show some other stuff, like thuymbnail, mimetype, and assets
+	var theInfo = "";
+	if ('thumbnailUrl' in json.data.temporalDataObject)
+                theInfo += '<img src="' + json.data.temporalDataObject.thumbnailUrl + '"><br/>';
+	if ('veritoneFile' in json.data.temporalDataObject.details)
+		theInfo += "<b>MIME type: </b>" + 
+			json.data.temporalDataObject.details.veritoneFile.mimetype + "<br/>";
+	theInfo += getAssetsAsMarkup( json ); 
+	showMsg( theInfo, "#explain" );
     }
 }
