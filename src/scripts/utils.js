@@ -281,7 +281,7 @@ async function showTDO( tdoId, selector ) {
                 theInfo += '<img src="' + json.data.temporalDataObject.thumbnailUrl + '"><br/>';
 	if ('veritoneFile' in json.data.temporalDataObject.details)
 		theInfo += "<b>MIME type: </b>" + 
-			json.data.temporalDataObject.details.veritoneFile.mimetype + "<br/>";
+			json.data.temporalDataObject.details.veritoneFile.mimetype + "<br/><br/>";
 	theInfo += getAssetsAsMarkup( json ); 
 	showMsg( theInfo, "#explain" );
     }
