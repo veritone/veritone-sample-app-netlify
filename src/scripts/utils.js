@@ -169,11 +169,12 @@ function showSnackbar(msg, err) {
 
 // Utility for showing text in a DOM element
 function showMsg(msg, id) {
-    var messageNode = document.querySelector( id );
+    let messageNode = document.querySelector( id );
     messageNode.innerHTML = msg;
 }
 
-var TDO_QUERY_TEMPLATE = `{
+// GraphQL query for obtaining verbose TDO raw data:
+let TDO_QUERY_TEMPLATE = `{
   temporalDataObject(id: theID) {
     name
     id
@@ -215,13 +216,14 @@ var TDO_QUERY_TEMPLATE = `{
 }
 `;
 
+// Find assets in TDO, and make links out of their signedUri data
 function getAssetsAsMarkup( json ) {
 	
     if ('assets' in json.data.temporalDataObject ) {
-         var records = json.data.temporalDataObject.assets.records;
-         var markup = "";
-         var link = '<a href="URL" target="_blank">TARGET</a>';
-         var results = [];
+         let records = json.data.temporalDataObject.assets.records;
+         let markup = "";
+         let link = '<a href="URL" target="_blank">TARGET</a>';
+         let results = [];
          records.forEach( item=> { 
              if (item.signedUri && item.signedUri.length > 0) {
                   var a = link.replace("URL",item.signedUri).replace("TARGET",item.assetType);
@@ -229,7 +231,7 @@ function getAssetsAsMarkup( json ) {
              }
          });
 
-         var msg = '<div style="font-size:var(--mediumFontSize);"><b>Assets in this TDO:</b><br/>' + 
+         let msg = '<div style="font-size:var(--mediumFontSize);"><b>Assets in this TDO:</b><br/>' + 
 	     results.join("<br/>") + "</div>"; 
          if (results.join("").length == 0)
 	     msg = '<div style="font-size:var(--mediumFontSize);"><b>No assets in this TDO</b><br/><div>';
@@ -294,7 +296,7 @@ let _totalPollAttempts = 0;
 const MAX_POLL_ATTEMPTS = 40;
 const POLL_INTERVAL = 15000;
 
-// Use the enbine named "task-google-video-intelligence-chunk-label":
+// We use the engine named "task-google-video-intelligence-chunk-label":
 let DEFAULT_ENGINE = "60755416-766f-4014-bad9-f0ac8d900b86";
 
 function logToScreen(msg, selector) {
@@ -314,30 +316,9 @@ function cancelPoll() {
   }
 }
 
-function handleJobButton() {
-	
-   let tdo = TDO_ID || prompt("No TDO_ID is available. Would you like to specify one?");
-   if (!tdo) return;
-	
-   createCancelJobButton( tdo, "#addContentHere" );
-   console.log( createTheJobQuery( tdo, DEFAULT_ENGINE ) );
-}
-
-function createCancelJobButton( jobID, selector ) { 
-  let vanish = "clearScreenLog('" + selector + "');";
-  let cancelbutton = ` <button 
-             class="smallbutton button-red"
-             onclick="cancelJob('JOB'); 
-	     cancelPoll(); VANISH">
-                 Cancel Job
-             </button>`.replace(/VANISH/,vanish).replace(/JOB/,jobID.trim());
-	
-  logToScreen( cancelbutton, selector );
-}
-
 async function cancelJob( jobID ) {
 	
-  var query = `mutation {
+  let query = `mutation {
     cancelJob(id: "JOB") {
       id
     } 
@@ -348,6 +329,149 @@ async function cancelJob( jobID ) {
     	showSnackbar("Check the console... ", 1);
         console.log("Welp. Got this message: " + e.toString());
     });
+	
+   logToScreen( "\nRan this query:\n" + query +"\n", "#job_log" )
+   logToScreen( "\nGot back:\n" + JSON.stringify(json,null,3), "#job_log" );
+}
+
+async function handleJobButtonClick() {
+	
+   let jobId = "";
+	
+   clearScreenLog("#job_log");
+	
+   if (!_token) {
+	showSnackbar("Looks like you need to log in first." , true );
+	return;
+   }
+	
+   let tdo = TDO_ID || prompt("No TDO_ID is available. Would you like to specify one?");
+   if (!tdo) 
+	return;
+		
+   // Get the query
+   let query = createTheJobQuery( tdo, DEFAULT_ENGINE );
+
+   // Create the payload
+   let payload = createVeritonePayload( query, _token );
+	
+   // Kick off the job
+   let json = await fetchJSONviaPOST( API_ENDPOINT, payload).catch(e=>{
+    	showSnackbar("Check the console.", true );
+        console.log("Got this exception:\n" + e.toString());
+   });	
+
+   // log an update to UI:
+   logToScreen( "We ran this query:\n\n" + query + "\n\n", "#job_log" );
+	
+   if (json) {
+	logToScreen( "We got back this result:\n\n" + JSON.stringify(json,null,3) + "\n\n", "#job_log" );
+	if ('errors' in json) {
+		showSnackbar("Error. Job aborted.");
+		return;
+	}
+	jobID = json.data.createJob.id;
+	logToScreen("The jobId is " + jobId + ".\n", "#job_log");
+        
+	logToScreen("We will poll for completion every " + POLL_INTERVAL/1000 + 
+		    " seconds, a maximum of " + MAX_POLL_ATTEMPTS + 
+		    " times.\n", "#job_log");
+           
+	   // create the Cancel button and display it
+	createCancelJobButton( tdo, "#addContentHere" ); 
+
+	   // POLL FOR STATUS
+        _pollkey = setInterval(()=>{
+                checkTheJobStatus(jobID, DEFAULT_ENGINE)
+        }, POLL_INTERVAL);
+	   
+   } // if json
+	
+} // handleJobButtonClick()
+
+// This is our polling function. It is called repeatedly.
+async function checkTheJobStatus(jobID, engineID) {
+	
+   _totalPollAttempts += 1;
+	
+   logToScreen("Poll Attempts = " + _totalPollAttempts + "\n", "#job_log");
+   
+   let query = `query jobStatus {
+          job(id: "JOB_ID") {   
+               status
+               tasks {    
+                 records {    
+                   status
+                   id
+                 }
+               }
+             }
+           }`.replace(/JOB_ID/, jobID);
+
+   let payload = createVeritonePayload( query, _token );
+	
+   let json = await fetchJSONviaPOST( API_ENDPOINT, payload)
+   .catch(e=>{
+    	showSnackbar("Check the console.", true) && console.log("--> " + e.toString());
+   });	
+   
+   // Are we done yet?
+   let jobCompleted = (json.data.job.status == 'complete');
+	
+   // Are all tasks 'complete'?
+   let totalTasks = json.data.job.tasks.records.length;
+   let completedTasks = 0;
+   json.data.job.tasks.records.forEach( t=>{
+                completedTasks += (t.status == 'complete');
+       });
+   let tasksAllCompleted = (completedTasks == totalTasks);
+  
+   // SUCCESS
+   if (jobCompleted && tasksAllCompleted) {
+
+       logToScreen("\nJob complete, all tasks complete.\n", "#job_log");
+       cancelPoll();
+                
+       // remove the Cancel Job button
+       clearScreenLog("#addContentHere");
+
+       // Now get the engine's results
+       let tdoId = json.data.job.targetId;
+       let q = createEngineResultsQuery(tdoID, engineID);
+       let thePayload = createVeritonePayload( q, _token );
+       let objects = await etchJSONviaPOST( API_ENDPOINT, thePayload);
+
+        // Show results
+       logToScreen("\n=================== RESULTS =====================\n","#job_log");
+       logToScreen(JSON.stringify(objects,null,3), "#job_log");
+   }
+   else logToScreen("\nJob status = " + json.data.job.status + 
+                             " & " + completedTasks + 
+                             " task(s) complete, out of " + totalTasks, "#job_log");
+	
+   // Timed out? 
+   if ( _totalPollAttempts >= MAX_POLL_ATTEMPTS ) {
+              
+       cancelPoll();
+              
+       // remove the Cancel Job button
+       clearScreenLog("#addContentHere");
+              
+       logToScreen("Stopped polling after MAX_POLL_ATTEMPTS","#job_log");                 
+   }
+	
+}
+
+function createCancelJobButton( jobID, selector ) { 
+  let vanish = "clearScreenLog('" + selector + "');";
+  let cancelbutton = ` <button 
+             class="smallbutton button-red"
+             onclick="cancelJob('JOB'); 
+	     cancelPoll(); VANISH">
+                 Cancel Job
+             </button>`.replace(/VANISH/,vanish).replace(/JOB/, jobID);
+	
+  logToScreen( cancelbutton, selector );
 }
 
 function createTheJobQuery(tdoID, engineID ) {
@@ -363,6 +487,5 @@ function createTheJobQuery(tdoID, engineID ) {
       }
     }`;
 	
-    return query.replace(/TDO_ID/, tdoID).replace(/ENGINE_ID/, engineID);
-	
+    return query.replace(/TDO_ID/, tdoID).replace(/ENGINE_ID/, engineID);	
 }
