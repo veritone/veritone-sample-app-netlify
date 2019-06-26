@@ -250,11 +250,11 @@ async function showTDO( tdoId, selector ) {
     }
     
     // Query to get a single TDO
-    var query = TDO_QUERY_TEMPLATE.replace( /theID/, '"'+ tdoId + '"');
+    let query = TDO_QUERY_TEMPLATE.replace( /theID/, '"'+ tdoId + '"');
     let payload = createVeritonePayload( query, _token );
-    var json = await fetchJSONviaPOST( API_ENDPOINT, payload).catch(e=>{
+    let json = await fetchJSONviaPOST( API_ENDPOINT, payload).catch(e=>{
     	showSnackbar("Check the console... ", 1);
-        conbsole.log("Welp. Got this message: " + e.toString());
+        console.log("Welp. Got this message: " + e.toString());
     });
 
     if (json) {
@@ -315,5 +315,50 @@ function cancelPoll() {
 }
 
 function handleJobButton() {
-   console.log("handleJobButton() does nothing, right now.");
+	createCancelJobButton( 123456, "#addContentHere" );
+   console.log( createTheJobQuery( TDO_ID, DEFAULT_ENGINE ) );
+}
+
+function createCancelJobButton( jobID, selector ) { 
+  let vanish = 'clearScreenLog("' + selector + '");';
+  let cancelbutton = ` <button 
+             class="smallbutton button-red"
+             onclick="cancelJob('JOB'); 
+	     cancelPoll(); VANISH">
+                 Cancel Job
+             </button>`.replace(/VANISH/,vanish).replace(/JOB/,jobID.trim());
+	
+  logToScreen( cancelbutton, selector );
+}
+
+async function cancelJob( jobID ) {
+	
+  var query = `mutation {
+    cancelJob(id: "JOB") {
+      id
+    } 
+  }`.replace(/JOB/,jobID);
+
+  let payload = createVeritonePayload( query, _token );
+  let json = await fetchJSONviaPOST( API_ENDPOINT, payload).catch(e=>{
+    	showSnackbar("Check the console... ", 1);
+        console.log("Welp. Got this message: " + e.toString());
+    });
+}
+
+function createTheJobQuery(tdoID, engineID ) {
+
+    let query = `mutation createJob{
+      createJob(input: {
+        targetId: "TDO_ID",
+        tasks: [{
+          engineId: "ENGINE_ID"
+        }]
+      }) {
+        id
+      }
+    }`;
+	
+    return query.replace(/TDO_ID/, tdoID).replace(/ENGINE_ID/, engineID);
+	
 }
