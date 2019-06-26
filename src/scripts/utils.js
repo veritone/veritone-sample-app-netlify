@@ -315,8 +315,12 @@ function cancelPoll() {
 }
 
 function handleJobButton() {
-	createCancelJobButton( '123456', "#addContentHere" );
-   console.log( createTheJobQuery( TDO_ID, DEFAULT_ENGINE ) );
+	
+   let tdo = TDO_ID || prompt("No TDO_ID is available. Would you like to specify one?");
+   if (!tdo) return;
+	
+   createCancelJobButton( tdo, "#addContentHere" );
+   console.log( createTheJobQuery( tdo, DEFAULT_ENGINE ) );
 }
 
 function createCancelJobButton( jobID, selector ) { 
