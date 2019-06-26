@@ -286,3 +286,34 @@ async function showTDO( tdoId, selector ) {
 	showMsg( theInfo, "#explain" );
     }
 }
+
+// ======== Create Job, Poll, Show Results, etc. =========
+
+let _pollkey = null; // Ugh, this is needed for clearInterval()
+let _totalPollAttempts = 0;
+const MAX_POLL_ATTEMPTS = 40;
+const POLL_INTERVAL = 15000;
+
+// Use the enbine named "task-google-video-intelligence-chunk-label":
+let DEFAULT_ENGINE = "60755416-766f-4014-bad9-f0ac8d900b86";
+
+function logToScreen(msg, selector) {
+  document.querySelector(selector).innerHTML = document.querySelector(selector).innerHTML + "\n" + msg;
+}
+
+function clearScreenLog(selector) { 
+  document.querySelector(selector).innerHTML = "";
+}
+
+function cancelPoll() { 
+  if (_pollkey) {
+     clearInterval(_pollkey);
+     _totalPollAttempts = 0;
+     _pollkey = null;
+     showSnackbar("Polling has stopped.");
+  }
+}
+
+function handleJobButton() {
+   console.log("handleJobButton() does nothing, right now.");
+}
