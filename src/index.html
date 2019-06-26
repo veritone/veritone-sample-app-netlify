@@ -25,37 +25,37 @@
                                              name="pw"></label>
      </p>
      <p><button onclick="login()">Log in</button></p> 
+    
+    <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+    <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
    
-    
-    
-    </p>
-    
-    
-    <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
-    <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
-    
-    
-    
-    <!-- ------------------ PROCESS ------------------- -->
-    <br/>
+    <!-- ------------------ TDO DETAIL SECTION ------------------- -->
     <h1 id="process"></h1>  
-    <p id="explain">Nothing here yet. </p>
-    <pre id="rawdata"></pre>
-    
+    <p id="explain">Nothing to see yet. </p>
+    <pre id="rawdata" class="scrolling"></pre>   
     
     <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
     <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
 
+    <!-- ------------------- NEW JOB SECTION ---------------------- --> 
+    <h1 id="job">New Job</h1>  
+    <p id="job_text">Click the button to kick off an object detection job.</p>
+    <p><button onclick="handleJobButton()">Start</button></p>
+    <pre id="job_log" class="scrolling"></pre> 
+    <div id="addContentHere"></div>
+    
+    <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+    <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
     
         <!-- --------------------------- FOOTER ----------------------------- -->
     <div class="footer"><b>
         <a href="#top" title="Click to go back to the top">Log-In</a> &nbsp;|&nbsp; 
-        <a href="#process" title="Process">Process</a>
+        <a href="#process" title="See TDO details">TDO Details</a>
+        <a href="#job" title="Run a new job">New Job</a>
     </div>
      <div id="snackbar"></div> <!-- This is hidden. It will serve toast messages -->
      <script src="/scripts/utils.js"><script>
      
-
   </body>
   
 </html>
