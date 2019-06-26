@@ -370,7 +370,7 @@ async function handleJobButtonClick() {
 		showSnackbar("Error. Job aborted.");
 		return;
 	}
-	jobID = json.data.createJob.id;
+	jobId = json.data.createJob.id;
 	logToScreen("The jobId is " + jobId + ".\n", "#job_log");
         
 	logToScreen("We will poll for completion every " + POLL_INTERVAL/1000 + 
@@ -407,6 +407,8 @@ async function checkTheJobStatus(jobID, engineID) {
                }
              }
            }`.replace(/JOB_ID/, jobID);
+	
+   console.log("Polling with query:\n" + query);
 
    let payload = createVeritonePayload( query, _token );
 	
