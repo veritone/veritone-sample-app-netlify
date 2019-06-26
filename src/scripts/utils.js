@@ -315,7 +315,7 @@ function cancelPoll() {
 }
 
 function handleJobButton() {
-	createCancelJobButton( 123456, "#addContentHere" );
+	createCancelJobButton( '123456', "#addContentHere" );
    console.log( createTheJobQuery( TDO_ID, DEFAULT_ENGINE ) );
 }
 
