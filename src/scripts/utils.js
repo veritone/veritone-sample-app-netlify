@@ -382,7 +382,7 @@ async function handleJobButtonClick() {
 
 	   // POLL FOR STATUS
         _pollkey = setInterval(()=>{
-                checkTheJobStatus(jobID, DEFAULT_ENGINE)
+                checkTheJobStatus(jobId, DEFAULT_ENGINE)
         }, POLL_INTERVAL);
 	   
    } // if json
