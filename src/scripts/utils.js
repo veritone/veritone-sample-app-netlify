@@ -320,7 +320,7 @@ function handleJobButton() {
 }
 
 function createCancelJobButton( jobID, selector ) { 
-  let vanish = 'clearScreenLog("' + selector + '");';
+  let vanish = "clearScreenLog('" + selector + "');";
   let cancelbutton = ` <button 
              class="smallbutton button-red"
              onclick="cancelJob('JOB'); 
