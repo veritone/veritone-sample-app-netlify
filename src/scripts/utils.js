@@ -6,6 +6,7 @@ const HOME_URL = "https://vtn-integration-demo.netlify.com";
 const TEXT_VALIDATION_ERROR_MSG = "That doesn't look right. Try again.";
 const DAYS_TO_STORE_TOKEN = 1;
 let TDO_ID = null;
+let TDO_JSON = null;
 let _token = null;
 
 function showToken( selector, token ) {
@@ -261,6 +262,9 @@ async function showTDO( tdoId, selector ) {
 
     if (json) {
 	    
+	    // cache a copy of it in a global
+	TDO_JSON = json;
+	    
 	    // get the stringified JSON
         let theRawData = JSON.stringify(json,null,3);
 	    
@@ -476,18 +480,27 @@ function createCancelJobButton( jobID, selector ) {
   logToScreen( cancelbutton, selector );
 }
 
-function createTheJobQuery(tdoID, engineID ) {
+function createTheJobQuery(tdoID, engineID, mediaID ) {
 
     let query = `mutation createJob{
-      createJob(input: {
-        targetId: "TDO_ID",
-        tasks: [{
-          engineId: "ENGINE_ID"
-        }]
-      }) {
-        id
-      }
-    }`;
+  createJob(input: {
+    targetId: "TDO_ID",
+    isReprocessJob: true,
+    tasks: [
+    {
+      engineId: "ENGINE_ID"
+    }
+    ]
+  }) {
+    id
+  }
+}`;
 	
-    return query.replace(/TDO_ID/, tdoID).replace(/ENGINE_ID/, engineID);	
+    return query.replace(/TDO_ID/, tdoID).replace(/ENGINE_ID/, engineID).replace(/MEDIA_URI/, mediaID);	
 }
+/*{
+         engineId:"9e611ad7-2d3b-48f6-a51b-0a1ba40feab4",
+         payload:{
+             url: "MEDIA_URI"
+         }
+    } ,*/
