@@ -444,8 +444,9 @@ async function checkTheJobStatus(jobID, engineID) {
        // Now get the engine's results
        let tdoId = json.data.job.targetId;
        let q = createEngineResultsQuery(tdoId, engineID);
+       console.log("We fetched engine results using:\n" + q);
        let thePayload = createVeritonePayload( q, _token );
-       let objects = await etchJSONviaPOST( API_ENDPOINT, thePayload);
+       let objects = await fetchJSONviaPOST( API_ENDPOINT, thePayload);
 
         // Show results
        logToScreen("\n=================== RESULTS =====================\n","#job_log");
