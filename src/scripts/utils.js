@@ -443,7 +443,7 @@ async function checkTheJobStatus(jobID, engineID) {
 
        // Now get the engine's results
        let tdoId = json.data.job.targetId;
-       let q = createEngineResultsQuery(tdoID, engineID);
+       let q = createEngineResultsQuery(tdoId, engineID);
        let thePayload = createVeritonePayload( q, _token );
        let objects = await etchJSONviaPOST( API_ENDPOINT, thePayload);
 
@@ -513,10 +513,3 @@ function createEngineResultsQuery(tdoID, engineID) {
 }`.replace(/TDO/, tdoID).replace(/ENGINE_ID/, engineID);
 
 }
-
-/*{
-         engineId:"9e611ad7-2d3b-48f6-a51b-0a1ba40feab4",
-         payload:{
-             url: "MEDIA_URI"
-         }
-    } ,*/
