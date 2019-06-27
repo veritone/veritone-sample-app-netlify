@@ -498,6 +498,22 @@ function createTheJobQuery(tdoID, engineID, mediaID ) {
 	
     return query.replace(/TDO_ID/, tdoID).replace(/ENGINE_ID/, engineID).replace(/MEDIA_URI/, mediaID);	
 }
+
+function createEngineResultsQuery(tdoID, engineID) {
+
+    return `query getEngineOutput {
+  engineResults(tdoId: "TDO",
+    engineIds: ["ENGINE_ID"]) {
+    records {
+      tdoId
+      engineId
+      jsondata
+    }
+  }
+}`.replace(/TDO/, tdoID).replace(/ENGINE_ID/, engineID);
+
+}
+
 /*{
          engineId:"9e611ad7-2d3b-48f6-a51b-0a1ba40feab4",
          payload:{
