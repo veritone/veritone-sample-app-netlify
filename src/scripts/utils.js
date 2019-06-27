@@ -403,6 +403,7 @@ async function checkTheJobStatus(jobID, engineID) {
    let query = `query jobStatus {
           job(id: "JOB_ID") {   
                status
+               targetId
                tasks {    
                  records {    
                    status
