@@ -285,7 +285,7 @@ async function showTDO( tdoId, selector ) {
 	var theInfo = "";
 	if ('thumbnailUrl' in json.data.temporalDataObject)
                 theInfo += '<img src="' + json.data.temporalDataObject.thumbnailUrl + 
-			'" style="transform: scale(0.7);"><br/>';
+			'" style="width:42%;"><br/>';
 	if ('veritoneFile' in json.data.temporalDataObject.details)
 		theInfo += "<b>MIME type: </b>" + 
 			json.data.temporalDataObject.details.veritoneFile.mimetype + "<br/><br/>";
@@ -298,7 +298,7 @@ async function showTDO( tdoId, selector ) {
 
 let _pollkey = null; // Ugh, this is needed for clearInterval()
 let _totalPollAttempts = 0;
-const MAX_POLL_ATTEMPTS = 40;
+const MAX_POLL_ATTEMPTS = 50;
 const POLL_INTERVAL = 15000;
 
 // We use the engine named "task-google-video-intelligence-chunk-label":
