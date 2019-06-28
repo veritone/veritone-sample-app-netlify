@@ -1,7 +1,5 @@
 # integration-demo
 
-Live demo (under construction!) is at https://vtn-integration-demo.netlify.com
-
 ## What Is It?
 A simple web page to demonstrate integration with Veritone Developer framework.
 
