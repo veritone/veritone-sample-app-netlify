@@ -284,7 +284,8 @@ async function showTDO( tdoId, selector ) {
 	    // show some other stuff, like thuymbnail, mimetype, and assets
 	var theInfo = "";
 	if ('thumbnailUrl' in json.data.temporalDataObject)
-                theInfo += '<img src="' + json.data.temporalDataObject.thumbnailUrl + '"><br/>';
+                theInfo += '<img src="' + json.data.temporalDataObject.thumbnailUrl + 
+			'" style="transform: scale(0.7);"><br/>';
 	if ('veritoneFile' in json.data.temporalDataObject.details)
 		theInfo += "<b>MIME type: </b>" + 
 			json.data.temporalDataObject.details.veritoneFile.mimetype + "<br/><br/>";
