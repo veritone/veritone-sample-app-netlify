@@ -3,10 +3,12 @@
 ## What Is It?
 A simple web page to demonstrate integration with Veritone Developer framework.
 
-Characteristics:
-* Serverless SPA (single-page app): The app is just a static web page with static resources, hosted on a CDN. No server-side logic. 
-* Plain vanilla HTML+JS+CSS. No frameworks will be used. (E.g. no Angular, no React, no Vue, etc.)
-* For easy hosting and continuous deployment, we will use Netlify to hoist the app onto the web, straight from Github.
 
-This is a work in progress.
+License
+Copyright 2019, Veritone Inc.
 
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
