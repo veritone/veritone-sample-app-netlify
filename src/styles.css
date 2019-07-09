@@ -25,6 +25,10 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+.spacer {
+	height:100%;
+}
+
 .footer {
    position: fixed;
    left: 0;
