@@ -1,6 +1,6 @@
 # veritone-sample-app-netlify
 
-Welcome to the Veritone sample app! 
+Welcome to the Veritone sample app! See the live app at: https://veritone-sample-app.netlify.com
 
 ## What Is It?
 A simple web page to demonstrate integration with Veritone Developer framework. The app shows how to authenticate to the Veritone platform; integrate with the Veritone CMS; and use API methods to carry out AI operations (such as Object Detection) on media files.
