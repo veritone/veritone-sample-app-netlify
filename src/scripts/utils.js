@@ -242,7 +242,6 @@ function getAssetsAsMarkup( json ) {
 	
     if ('assets' in json.data.temporalDataObject ) {
          let records = json.data.temporalDataObject.assets.records;
-         let markup = "";
          let link = '<a href="URL" target="_blank">TARGET</a>';
          let results = [];
          records.forEach( item=> { 
@@ -252,12 +251,11 @@ function getAssetsAsMarkup( json ) {
              }
          });
 
-         let msg = '<div style="font-size:var(--mediumFontSize);"><b>Assets in this TDO:</b><br/>' + 
-	     results.join("<br/>") + "</div>"; 
          if (results.join("").length == 0)
-	     msg = '<div style="font-size:var(--mediumFontSize);"><b>No assets in this TDO</b><br/><div>';
+	     return '<div style="font-size:var(--mediumFontSize);"><b>No assets in this TDO</b><br/><div>';
 	 
-	 return msg;
+	 return '<div style="font-size:var(--mediumFontSize);"><b>Assets in this TDO:</b><br/>' + 
+	     results.join("<br/>") + "</div>"; 
     }
 	
     return "";
