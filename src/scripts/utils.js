@@ -475,6 +475,13 @@ async function checkTheJobStatus(jobID, engineID) {
    else logToScreen("\nJob status = " + json.data.job.status + 
                              " & " + completedTasks + 
                              " task(s) complete, out of " + totalTasks, "#job_log");
+
+   // Job failed?
+   if (json.data.job.status == 'failed') {
+       cancelPoll();
+       clearScreenLog("#addContentHere");
+       logToScreen("Job failed. Polling has stopped.","#job_log");
+   }
 	
    // Timed out? 
    if ( _totalPollAttempts >= MAX_POLL_ATTEMPTS ) {
