@@ -503,7 +503,7 @@ function createCancelJobButton( jobID, selector ) {
   logToScreen( cancelbutton, selector );
 }
 
-function createTheJobQuery(tdoID, engineID, mediaID ) {
+function createTheJobQuery(tdoID, engineID) {
 
     let query = `mutation createJob{
   createJob(input: {
@@ -519,7 +519,7 @@ function createTheJobQuery(tdoID, engineID, mediaID ) {
   }
 }`;
 	
-    return query.replace(/TDO_ID/, tdoID).replace(/ENGINE_ID/, engineID).replace(/MEDIA_URI/, mediaID);	
+    return query.replace(/TDO_ID/, tdoID).replace(/ENGINE_ID/, engineID);	
 }
 
 function createEngineResultsQuery(tdoID, engineID) {
