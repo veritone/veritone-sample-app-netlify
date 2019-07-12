@@ -280,9 +280,6 @@ async function showTDO( tdoId, selector ) {
 
     if (json) {
 	    
-	    // cache a copy of it in a global
-	TDO_JSON = json;
-	    
 	    // get the stringified JSON
         let theRawData = JSON.stringify(json,null,3);
 	    
@@ -368,9 +365,7 @@ async function handleJobButtonClick() {
 	return;
    }
 	
-   let tdo = TDO_ID || prompt("No TDO_ID is available. Would you like to specify one?");
-   if (!tdo) 
-	return;
+   let tdo = TDO_ID;
 		
    // Get the query
    let query = createTheJobQuery( tdo, DEFAULT_ENGINE );
